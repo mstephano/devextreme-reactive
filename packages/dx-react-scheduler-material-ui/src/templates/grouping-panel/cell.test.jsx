@@ -4,7 +4,7 @@ import { HORIZONTAL_GROUP_ORIENTATION, VERTICAL_GROUP_ORIENTATION } from '@devex
 import { Cell } from './cell';
 
 jest.mock('@material-ui/core/styles', () => ({
-  ...require.requireActual('@material-ui/core/styles'),
+  ...jest.requireActual('@material-ui/core/styles'),
   makeStyles: jest.fn(() => () => ({
     cell: 'cell',
     text: 'text',
@@ -123,13 +123,28 @@ describe('GroupingPanel', () => {
         .toBe('rowSpan');
     });
 
-    it('should render text container', () => {
+    it('should assign text container class when vertical grouping is used', () => {
       const tree = shallow((
-        <Cell {...defaultProps} />
+        <Cell
+          {...defaultProps}
+          groupOrientation={VERTICAL_GROUP_ORIENTATION}
+        />
       ));
 
       expect(tree.find('.textContainer').exists())
-        .toBeTruthy();
+        .toBe(true);
+    });
+
+    it('should not assign textContainer class if horizontal grouping is used', () => {
+      const tree = shallow((
+        <Cell
+          {...defaultProps}
+          groupOrientation={HORIZONTAL_GROUP_ORIENTATION}
+        />
+      ));
+
+      expect(tree.find('.textContainer').exists())
+        .toBe(false);
     });
   });
 });
